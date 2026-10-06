@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ROYAL MOTORS | SOLID DASHBOARD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /* STATIC LEFT-TO-RIGHT BRIGHT GRADIENT (no animation) */
+        
+        body {
+            background: linear-gradient(90deg, #3D6CFF, #FF33CC);
+            background-size: 100% 100%;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        /* SIDEBAR – SOLID GRADIENT, NO TRANSPARENCY, NO BLUR */
+        
+        .sidebar-solid {
+            background: linear-gradient(90deg, #3D6CFF, #FF33CC);
+            border-right: 2px solid rgba(255, 215, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        /* mobile */
+        
+        @media (max-width: 768px) {
+            .sidebar-solid {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 100;
+                width: 280px;
+            }
+            .sidebar-solid.open {
+                transform: translateX(0);
+            }
+        }
+        
+        .nav-active {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.3), rgba(0, 255, 200, 0.2));
+            border-left: 4px solid #FFD700;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .sidebar-link {
+            transition: 0.2s;
+            border-radius: 1rem;
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+        /* === ALL CARD DESIGNS (UNIQUE, STATIC GRADIENTS) === */
+        
+        .card-neo-1 {
+            background: linear-gradient(145deg, rgba(255, 255, 240, 0.2), rgba(255, 200, 150, 0.2));
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-neo-1:hover {
+            transform: translateY(-6px);
+            border-color: #fff;
+        }
+        
+        .card-pill {
+            border-radius: 60px 30px 60px 30px;
+            background: linear-gradient(115deg, #FF6B6B, #FFB347);
+            box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: 0.2s;
+        }
+        
+        .card-pill:hover {
+            transform: scale(1.01) translateY(-4px);
+        }
+        
+        .card-radial {
+            background: radial-gradient(circle at top left, #A155FF, #FF66CC);
+            border-radius: 28px;
+            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.4);
+            transition: 0.2s;
+        }
+        
+        .card-radial:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px -10px black;
+        }
+        
+        .card-accent {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 28px;
+            border-bottom: 4px solid #CCFF00;
+            transition: 0.2s;
+        }
+        
+        .card-accent:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-3px);
+        }
+        
+        .card-diagonal {
+            background: linear-gradient(125deg, #00F0FF, #CCFF00);
+            border-radius: 30px 15px 30px 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-action {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 60px;
+            transition: 0.2s;
+        }
+        
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.98);
+        }
+        
+        .transaction-fresh {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 22px;
+            border-left: 5px solid;
+            transition: 0.2s;
+        }
+        
+        .transaction-fresh:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(4px);
+        }
+        
+         ::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: #FFD966;
+            border-radius: 20px;
+        }
+        
+        .auth-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: grid;
+            place-items: center;
+            overflow-y: auto;
+            padding: 24px;
+            color: #f7f8f5;
+            background: #111715;
+            background-image: linear-gradient(115deg, rgba(17, 23, 21, 0.96) 10%, rgba(17, 23, 21, 0.8) 58%, rgba(17, 23, 21, 0.95)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2000&q=85');
+            background-position: center;
+            background-size: cover;
+        }
+        
+        .auth-layout {
+            width: min(100%, 1020px);
+            display: grid;
+            grid-template-columns: 1fr 410px;
+            align-items: center;
+            gap: 64px;
+        }
+        
+        .auth-story h1 {
+            max-width: 560px;
+            margin-top: 22px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(42px, 6vw, 76px);
+            line-height: 0.98;
+            font-weight: 600;
+        }
+        
+        .auth-story p {
+            max-width: 430px;
+            margin-top: 20px;
+            color: #b4c0b9;
+            line-height: 1.7;
+        }
+        
+        .auth-panel {
+            padding: 32px;
+            color: #19211d;
+            background: #f6f7f2;
+            border-radius: 8px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+        }
+        
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            padding: 4px;
+            margin: 22px 0 24px;
+            background: #e8ebe5;
+            border-radius: 6px;
+        }
+        
+        .auth-tab {
+            min-height: 42px;
+            border: 0;
+            border-radius: 4px;
+            color: #66716a;
+            background: transparent;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .auth-tab[aria-selected="true"] {
+            color: #17211b;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-form label {
+            display: block;
+            margin: 15px 0 7px;
+            color: #36423b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .auth-form input {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 13px;
+            border: 1px solid #d2d9d2;
+            border-radius: 4px;
+            outline: none;
+            color: #19211d;
+            background: white;
+            font: inherit;
+            font-size: 14px;
+        }
+        
+        .auth-form select {
+            width: 100%;
+            min-height: 48px;
+            padding: 0 13px;
+            border: 1px solid #d7e0e9;
+            border-radius: 5px;
+            outline: none;
+            color: #19211d;
+            background: #fbfcfd;
+            font: inherit;
+            font-size: 14px;
+        }
+        
+        .auth-password-field {
+            position: relative;
+        }
+        
+        .auth-password-field input {
+            padding-right: 48px;
+        }
+        
+        .auth-password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            border: 0;
+            color: #6486a7;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        .auth-terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin-top: 17px;
+            color: #53677d;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .auth-terms input {
+            width: 16px;
+            min-height: 16px;
+            margin-top: 1px;
+            accent-color: #315e89;
+        }
+        
+        .auth-terms a {
+            color: #315e89;
+            text-decoration: underline;
+        }
+        
+        .auth-form .auth-terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin: 17px 0 0;
+            color: #53677d;
+            font-size: 12px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        
+        .auth-form .auth-terms input {
+            flex: 0 0 16px;
+            width: 16px;
+            min-height: 16px;
+            margin: 1px 0 0;
+            padding: 0;
+            accent-color: #315e89;
+        }
+        
+        .auth-form input:focus {
+            border-color: #547653;
+            box-shadow: 0 0 0 3px rgba(84, 118, 83, 0.14);
+        }
+        
+        .auth-submit {
+            width: 100%;
+            min-height: 48px;
+            margin-top: 22px;
+            border: 0;
+            border-radius: 4px;
+            color: #fff;
+            background: #294b36;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 160ms ease;
+        }
+        
+        .auth-submit:hover {
+            background: #203c2b;
+        }
+        
+        .auth-message {
+            min-height: 20px;
+            margin-top: 12px;
+            color: #a3342b;
+            font-size: 13px;
+        }
+        
+        .auth-note {
+            margin-top: 15px;
+            color: #778179;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 760px) {
+            .auth-layout {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                max-width: 430px;
+            }
+            .auth-story h1 {
+                font-size: 42px;
+            }
+            .auth-story p {
+                margin-top: 10px;
+                font-size: 14px;
+            }
+            .auth-panel {
+                padding: 24px;
+            }
+        }
+        
+        .auth-screen {
+            --auth-lime: #a6ff45;
+            --auth-aqua: #00e6bf;
+            --auth-ink: #482e3b;
+            color: #fff;
+            background-color: #4968f8;
+            background-image: linear-gradient(112deg, #426bf7 0%, #8250ed 52%, #ee2ac8 100%);
+        }
+        
+        .auth-screen::-webkit-scrollbar-thumb {
+            background: #9b49d8;
+        }
+        
+        .auth-screen::-webkit-scrollbar-track {
+            background: rgba(53, 42, 111, 0.28);
+        }
+        
+        .auth-layout {
+            width: min(100%, 470px);
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+        
+        .auth-story {
+            display: none;
+        }
+        
+        .auth-panel {
+            width: 100%;
+            padding: 36px;
+            border: 1px solid rgba(255, 236, 113, 0.72);
+            border-radius: 30px;
+            color: #fff;
+            background: linear-gradient(135deg, #ec58a9 0%, #ff9364 100%);
+            box-shadow: 0 22px 60px rgba(38, 15, 72, 0.3);
+        }
+        
+        .auth-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .auth-brand img {
+            display: block;
+            width: min(100%, 250px);
+            height: 76px;
+            object-fit: contain;
+        }
+        
+        .auth-brand span {
+            margin-top: 6px;
+            color: #5b3c67;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .auth-kicker {
+            color: var(--auth-ink);
+            text-align: center;
+        }
+        
+        #authHeading {
+            color: var(--auth-lime);
+            text-align: center;
+        }
+        
+        .auth-intro {
+            margin-top: 7px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            text-align: center;
+        }
+        
+        .auth-tabs {
+            margin: 24px 0;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 6px;
+            background: rgba(85, 39, 62, 0.3);
+        }
+        
+        .auth-tab {
+            border-radius: 4px;
+        }
+        
+        .auth-tab[aria-selected="true"] {
+            color: #3f2a3b;
+            background: var(--auth-lime);
+            box-shadow: 0 2px 8px rgba(72, 39, 65, 0.22);
+        }
+        
+        .auth-tab {
+            color: rgba(255, 255, 255, 0.94);
+        }
+        
+        .auth-form label {
+            margin: 14px 0 7px;
+            color: #fff;
+        }
+        
+        .auth-form label i {
+            width: 19px;
+            color: var(--auth-aqua);
+        }
+        
+        .auth-form input {
+            min-height: 48px;
+            border-color: rgba(66, 36, 48, 0.72);
+            border-radius: 20px;
+            color: #fff;
+            background: #58363e;
+        }
+        
+        .auth-form input:focus {
+            border-color: var(--auth-aqua);
+            box-shadow: 0 0 0 3px rgba(0, 230, 191, 0.2);
+        }
+        
+        .auth-form input::placeholder {
+            color: #c9adb7;
+        }
+        
+        .auth-form select {
+            border-color: rgba(66, 36, 48, 0.72);
+            border-radius: 20px;
+            color: var(--auth-lime);
+            background: #58363e;
+        }
+        
+        .auth-form select:focus {
+            border-color: var(--auth-aqua);
+            box-shadow: 0 0 0 3px rgba(0, 230, 191, 0.2);
+        }
+        
+        .auth-password-toggle {
+            color: var(--auth-aqua);
+        }
+        
+        .auth-form .auth-terms {
+            color: #fff4e8;
+        }
+        
+        .auth-form .auth-terms a {
+            color: var(--auth-lime);
+        }
+        
+        .auth-form .auth-terms input {
+            accent-color: var(--auth-aqua);
+        }
+        
+        .auth-submit {
+            margin-top: 12px;
+            border-radius: 20px;
+            color: #26354a;
+            background: var(--auth-aqua);
+        }
+        
+        .auth-submit:hover {
+            background: #27f3d0;
+        }
+        
+        .auth-note {
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.32);
+            color: rgba(255, 255, 255, 0.87);
+            text-align: center;
+        }
+        
+        .auth-security {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin-top: 18px;
+            color: #fff3e8;
+            font-size: 11px;
+        }
+        
+        .auth-security i {
+            margin-right: 5px;
+            color: var(--auth-lime);
+        }
+        
+        @media (max-width: 760px) {
+            .auth-layout {
+                max-width: 430px;
+            }
+            .auth-panel {
+                padding: 26px 22px;
+            }
+        }
+        
+        .profile-dialog {
+            width: min(92vw, 480px);
+            max-height: 85vh;
+            margin: auto;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            color: #17211b;
+            background: #f6f7f2;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+        }
+        
+        .profile-dialog::backdrop {
+            background: rgba(8, 14, 11, 0.72);
+        }
+        
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 14px 20px;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+        
+        .profile-details dt {
+            color: #6b776e;
+        }
+        
+        .profile-details dd {
+            max-width: 230px;
+            text-align: right;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+        
+        @media (max-width: 540px) {
+            .profile-dialog {
+                padding: 22px;
+            }
+            .profile-details {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            .profile-details dd {
+                max-width: none;
+                text-align: left;
+                margin-bottom: 10px;
+            }
+        }
+        
+        .package-view {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 24px;
+        }
+        
+        .package-card {
+            display: flex;
+            min-height: 260px;
+            flex-direction: column;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 8px;
+            color: #18211b;
+            background: #f6f7f2;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+        }
+        
+        .package-card[data-active="true"] {
+            border: 2px solid #f4d35e;
+        }
+        
+        .package-price {
+            margin-top: 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .package-activate {
+            min-height: 46px;
+            margin-top: auto;
+            border: 0;
+            border-radius: 4px;
+            color: white;
+            background: #294b36;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        .package-activate:hover {
+            background: #203c2b;
+        }
+        
+        .package-activate:disabled {
+            color: #203c2b;
+            background: #dce8dc;
+            cursor: default;
+        }
+        
+        .package-notice {
+            min-height: 24px;
+            margin-top: 18px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .service-view {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .service-panel {
+            padding: 24px;
+            border-radius: 8px;
+            color: #19211d;
+            background: #f6f7f2;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+        }
+        
+        .service-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 22px;
+        }
+        
+        .service-field {
+            min-width: 0;
+        }
+        
+        .service-field-full {
+            grid-column: 1 / -1;
+        }
+        
+        .service-form label {
+            display: block;
+            margin-bottom: 7px;
+            color: #36423b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .service-form input,
+        .service-form select {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 12px;
+            border: 1px solid #d2d9d2;
+            border-radius: 4px;
+            color: #19211d;
+            background: #fff;
+            font: inherit;
+        }
+        
+        .service-form input[type="file"] {
+            height: auto;
+            padding: 10px;
+        }
+        
+        .service-submit {
+            min-height: 48px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 4px;
+            color: #fff;
+            background: #294b36;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        .service-submit:hover {
+            background: #203c2b;
+        }
+        
+        .service-status {
+            min-height: 22px;
+            margin-top: 14px;
+            color: #294b36;
+            font-size: 13px;
+        }
+        
+        .service-hint {
+            margin-top: 14px;
+            color: #66716a;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+        
+        .service-records {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        
+        .service-record {
+            padding: 12px 14px;
+            border-left: 3px solid #547653;
+            color: #25332a;
+            background: #e9eee8;
+            font-size: 13px;
+        }
+        
+        .download-view {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .download-product {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
+            align-items: center;
+            gap: 24px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            background: rgba(14, 18, 28, 0.34);
+        }
+        
+        .download-product img {
+            display: block;
+            width: 100%;
+            max-height: 680px;
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: #151821;
+            object-fit: contain;
+        }
+        
+        .download-product-info {
+            padding: 8px;
+        }
+        
+        @media (max-width: 700px) {
+            .download-product {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 14px;
+            }
+            .download-product-info {
+                padding: 4px;
+            }
+        }
+        
+        .ad-preview {
+            max-width: 100%;
+            max-height: 260px;
+            margin-top: 14px;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+        
+        @media (max-width: 600px) {
+            .service-form {
+                grid-template-columns: 1fr;
+            }
+            .service-field-full {
+                grid-column: auto;
+            }
+            .service-panel {
+                padding: 20px;
+            }
+        }
+        
+        .auth-screen {
+            --auth-lime: #FFD700;
+            --auth-aqua: #00FFC8;
+            --auth-ink: #fff;
+            color: #fff;
+            background: linear-gradient(90deg, #3D6CFF, #FF33CC);
+            background-size: 100% 100%;
+        }
+        
+        .auth-panel {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            color: #fff;
+            background: linear-gradient(145deg, rgba(255, 255, 240, 0.22), rgba(255, 200, 150, 0.2));
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.24);
+        }
+        
+        .auth-brand span,
+        .auth-kicker,
+        #authHeading,
+        .auth-form label,
+        .auth-form .auth-terms,
+        .auth-note,
+        .auth-security {
+            color: #fff;
+        }
+        
+        .auth-brand span,
+        .auth-form .auth-terms a,
+        .auth-security i {
+            color: #FFD700;
+        }
+        
+        .auth-tabs {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.25);
+        }
+        
+        .auth-tab {
+            color: rgba(255, 255, 255, 0.92);
+        }
+        
+        .auth-tab[aria-selected="true"] {
+            color: #111;
+            background: #FFD700;
+        }
+        
+        .auth-form input,
+        .auth-form select {
+            border-color: rgba(255, 255, 255, 0.45);
+            color: #fff;
+            background: rgba(0, 0, 0, 0.35);
+        }
+        
+        .auth-form input::placeholder {
+            color: rgba(255, 255, 255, 0.66);
+        }
+        
+        .auth-form select option {
+            color: #171717;
+            background: #fff;
+        }
+        
+        .auth-form input:focus,
+        .auth-form select:focus {
+            border-color: #00FFC8;
+            box-shadow: 0 0 0 3px rgba(0, 255, 200, 0.2);
+        }
+        
+        .auth-password-toggle,
+        .auth-form label i {
+            color: #00FFC8;
+        }
+        
+        .auth-form .auth-terms input {
+            accent-color: #FFD700;
+        }
+        
+        .auth-submit {
+            border-radius: 6px;
+            color: #111;
+            background: #FFD700;
+        }
+        
+        .auth-submit:hover {
+            background: #ffe54d;
+        }
+        
+        .auth-note {
+            border-color: rgba(255, 255, 255, 0.28);
+        }
+        
+        .auth-message {
+            color: #fff;
+        }
+        
+        .auth-screen::-webkit-scrollbar-thumb {
+            background: #FFD700;
+        }
+        
+        .service-panel,
+        .package-card,
+        .download-product {
+            border: 1px solid rgba(255, 255, 255, 0.34);
+            border-radius: 8px;
+            color: #fff;
+            background: linear-gradient(145deg, rgba(255, 255, 240, 0.2), rgba(255, 200, 150, 0.2));
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .package-card .text-green-800,
+        .service-panel .text-green-800 {
+            color: #FFD700;
+        }
+        
+        .package-price {
+            color: #111;
+        }
+        
+        .package-card[data-active="true"] {
+            border: 2px solid #FFD700;
+        }
+        
+        .package-activate,
+        .service-submit {
+            border-radius: 6px;
+            color: #111;
+            background: #FFD700;
+        }
+        
+        .package-activate:hover,
+        .service-submit:hover {
+            background: #ffe54d;
+        }
+        
+        .package-activate:disabled {
+            color: #111;
+            background: #00FFC8;
+        }
+        
+        .package-notice {
+            color: #fff;
+        }
+        
+        .service-panel {
+            color: #fff;
+        }
+        
+        .service-form label {
+            color: #fff;
+        }
+        
+        .service-form input,
+        .service-form select {
+            border-color: rgba(255, 255, 255, 0.45);
+            border-radius: 6px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.32);
+        }
+        
+        .service-form input::placeholder {
+            color: rgba(255, 255, 255, 0.68);
+        }
+        
+        .service-form input:focus,
+        .service-form select:focus {
+            border-color: #00FFC8;
+            outline: 2px solid rgba(0, 255, 200, 0.24);
+        }
+        
+        .service-form select option {
+            color: #171717;
+            background: #fff;
+        }
+        
+        .service-status {
+            color: #FFD700;
+        }
+        
+        .service-hint {
+            color: rgba(255, 255, 255, 0.82);
+        }
+        
+        .service-record,
+        .info-detail {
+            border-left: 3px solid #FFD700;
+            border-radius: 4px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.28);
+        }
+        
+        .info-details {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .info-detail {
+            padding: 12px 14px;
+            line-height: 1.55;
+        }
+        
+        .loan-interest-card {
+            padding: 14px 16px;
+            margin-top: 20px;
+            border-left: 4px solid #FFD700;
+            border-radius: 4px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .download-product img {
+            background: rgba(0, 0, 0, 0.45);
+        }
+        
+        .profile-dialog {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #fff;
+            background: linear-gradient(145deg, #3D6CFF, #a738d5);
+        }
+        
+        .profile-dialog .text-green-800,
+        .profile-details dt {
+            color: #FFD700;
+        }
+        
+        .profile-details dd {
+            color: #fff;
+        }
+        
+        .profile-dialog button {
+            color: #fff;
+        }
+        
+        .profile-dialog::backdrop {
+            background: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+
+<body class="text-white">
+
+    <section id="authScreen" class="auth-screen" aria-label="Royal Motors account access">
+        <div class="auth-layout">
+            <div class="auth-panel">
+                <div class="auth-brand">
+                    <img src="https://royalmotors.info/assets/logroyalb-removebg-preview.png" alt="Royal Motors">
+                    <span>ACCOUNT PORTAL</span>
+                </div>
+                <p class="auth-kicker text-xs uppercase tracking-widest font-bold">Member access</p>
+                <h2 id="authHeading" class="text-2xl font-bold mt-2">Welcome Back</h2>
+                <p id="authIntro" class="auth-intro">Sign in to continue to your account.</p>
+                <div class="auth-tabs" role="tablist" aria-label="Account access">
+                    <button id="loginTab" class="auth-tab" type="button" role="tab" aria-selected="true">Sign In</button>
+                    <button id="signupTab" class="auth-tab" type="button" role="tab" aria-selected="false">Create Account</button>
+                </div>
+                <form id="authForm" class="auth-form">
+                    <div id="nameField" hidden>
+                        <label for="accountName"><i class="fas fa-user" aria-hidden="true"></i>Username</label>
+                        <input id="accountName" name="username" autocomplete="username" minlength="3" maxlength="30" pattern="[A-Za-z0-9_.]+" placeholder="Choose a username">
+                    </div>
+                    <label for="accountEmail"><i class="fas fa-envelope" aria-hidden="true"></i>Email address</label>
+                    <input id="accountEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                    <div id="phoneField" hidden>
+                        <label for="accountPhone"><i class="fas fa-mobile-alt" aria-hidden="true"></i>Mobile number</label>
+                        <input id="accountPhone" name="phone" type="tel" autocomplete="tel" placeholder="+254 700 000 000">
+                    </div>
+                    <div id="countryField" hidden>
+                        <label for="accountCountry"><i class="fas fa-globe" aria-hidden="true"></i>Country</label>
+                        <select id="accountCountry" name="country">
+                            <option value="KE" selected>Kenya</option>
+                            <option value="UG">Uganda</option>
+                            <option value="TZ">Tanzania</option>
+                            <option value="RW">Rwanda</option>
+                            <option value="BI">Burundi</option>
+                            <option value="ET">Ethiopia</option>
+                            <option value="SO">Somalia</option>
+                            <option value="SS">South Sudan</option>
+                            <option value="ZA">South Africa</option>
+                            <option value="NG">Nigeria</option>
+                            <option value="GH">Ghana</option>
+                            <option value="US">United States</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="IN">India</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <label for="accountPassword"><i class="fas fa-lock" aria-hidden="true"></i>Password</label>
+                    <div class="auth-password-field">
+                        <input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters">
+                        <button id="togglePassword" class="auth-password-toggle" type="button" aria-label="Show password" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                    </div>
+                    <div id="confirmPasswordField" hidden>
+                        <label for="accountConfirmPassword"><i class="fas fa-check-circle" aria-hidden="true"></i>Confirm password</label>
+                        <div class="auth-password-field">
+                            <input id="accountConfirmPassword" name="password_confirmation" type="password" autocomplete="new-password" minlength="8" placeholder="Confirm your password">
+                            <button id="toggleConfirmPassword" class="auth-password-toggle" type="button" aria-label="Show confirmation password" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div id="termsField" hidden>
+                        <label class="auth-terms" for="termsAgreement">
+                            <input id="termsAgreement" name="terms" type="checkbox">
+                            <span>I agree to the <a href="#terms-of-service">Terms of Service</a> and <a href="#privacy-policy">Privacy Policy</a>.</span>
+                        </label>
+                    </div>
+                    <button id="authSubmit" class="auth-submit" type="submit">Sign In</button>
+                    <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+                </form>
+                <p class="auth-note">Accounts and payments are managed securely by the Royal Motors server. Existing browser demo accounts can move over when you sign in; unverified browser balances are not transferred.</p>
+                <div class="auth-security" aria-label="Account security status">
+                    <span><i class="fas fa-shield-alt" aria-hidden="true"></i>Password hashed</span>
+                    <span><i class="fas fa-lock" aria-hidden="true"></i>Private session</span>
+                    <span><i class="fas fa-circle" aria-hidden="true"></i>Server account</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="mobileOverlay" class="fixed inset-0 bg-black/70 z-40 hidden md:hidden"></div>
+
+
+    <!-- SIDEBAR – COMPLETELY SOLID GRADIENT (no transparency) -->
+    <style>
+        /* SIDEBAR – SOLID GRADIENT, NO TRANSPARENCY, NO BLUR */
+        
+        .sidebar-solid {
+            background: linear-gradient(90deg, #3D6CFF, #FF33CC);
+            border-right: 2px solid rgba(255, 215, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        /* mobile */
+        
+        @media (max-width: 768px) {
+            .sidebar-solid {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 100;
+                width: 280px;
+            }
+            .sidebar-solid.open {
+                transform: translateX(0);
+            }
+        }
+        
+        .nav-active {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.3), rgba(0, 255, 200, 0.2));
+            border-left: 4px solid #FFD700;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .sidebar-link {
+            transition: 0.2s;
+            border-radius: 1rem;
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .btn-action {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 60px;
+            transition: 0.2s;
+        }
+        
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.98);
+        }
+        /* ===== ENHANCED BOUNDARIES & UNIQUE ICONS ===== */
+        /* Give each menu item a distinct visual boundary - elegant card-like separation */
+        
+        .sidebar-link,
+        .nav-active {
+            position: relative;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s ease;
+        }
+        /* subtle boundary enhancement on hover */
+        
+        .sidebar-link:hover,
+        .nav-active:hover {
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(4px);
+        }
+        /* icon containers - each gets unique style, rounded elegant background */
+        
+        .sidebar-link i,
+        .nav-active i {
+            width: 2rem;
+            height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        /* each menu item gets its own unique icon color & gradient background */
+        
+        nav a:nth-child(1) i {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(255, 100, 80, 0.3));
+            color: #FFF2B5;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        nav a:nth-child(2) i {
+            background: linear-gradient(135deg, rgba(80, 230, 140, 0.45), rgba(40, 200, 180, 0.3));
+            color: #C8FFE0;
+        }
+        
+        nav a:nth-child(3) i {
+            background: linear-gradient(135deg, rgba(255, 160, 80, 0.45), rgba(255, 90, 110, 0.3));
+            color: #FFD8B8;
+        }
+        
+        nav a:nth-child(4) i {
+            background: linear-gradient(135deg, rgba(100, 170, 255, 0.45), rgba(70, 110, 240, 0.3));
+            color: #C8E5FF;
+        }
+        
+        nav a:nth-child(5) i {
+            background: linear-gradient(135deg, rgba(80, 220, 170, 0.45), rgba(50, 180, 140, 0.3));
+            color: #B8FFE8;
+        }
+        
+        nav a:nth-child(6) i {
+            background: linear-gradient(135deg, rgba(255, 160, 70, 0.45), rgba(255, 100, 90, 0.3));
+            color: #FFE0B8;
+        }
+        
+        nav a:nth-child(7) i {
+            background: linear-gradient(135deg, rgba(210, 130, 255, 0.45), rgba(150, 90, 230, 0.3));
+            color: #E8CCFF;
+        }
+        
+        nav a:nth-child(8) i {
+            background: linear-gradient(135deg, rgba(255, 220, 80, 0.45), rgba(255, 170, 50, 0.3));
+            color: #FFF0C0;
+        }
+        
+        nav a:nth-child(9) i {
+            background: linear-gradient(135deg, rgba(80, 220, 200, 0.45), rgba(50, 170, 210, 0.3));
+            color: #C0FFF0;
+        }
+        
+        nav a:nth-child(10) i {
+            background: linear-gradient(135deg, rgba(255, 130, 150, 0.45), rgba(250, 80, 120, 0.3));
+            color: #FFD0D8;
+        }
+        
+        nav a:nth-child(11) i {
+            background: linear-gradient(135deg, rgba(200, 120, 255, 0.45), rgba(140, 80, 220, 0.3));
+            color: #E8C8FF;
+        }
+        
+        nav a:nth-child(12) i {
+            background: linear-gradient(135deg, rgba(80, 200, 230, 0.45), rgba(50, 140, 210, 0.3));
+            color: #C0F0FF;
+        }
+        
+        nav a:nth-child(13) i {
+            background: linear-gradient(135deg, rgba(255, 180, 80, 0.45), rgba(255, 130, 50, 0.3));
+            color: #FFE8C0;
+        }
+        
+        nav a:nth-child(14) i {
+            background: linear-gradient(135deg, rgba(180, 110, 240, 0.45), rgba(130, 80, 210, 0.3));
+            color: #E0C0FF;
+        }
+        
+        nav a:nth-child(15) i {
+            background: linear-gradient(135deg, rgba(90, 220, 160, 0.45), rgba(60, 170, 130, 0.3));
+            color: #C0FFE0;
+        }
+        
+        nav a:nth-child(16) i {
+            background: linear-gradient(135deg, rgba(255, 120, 110, 0.45), rgba(220, 80, 100, 0.3));
+            color: #FFC8C0;
+        }
+        
+        nav a:nth-child(17) i {
+            background: linear-gradient(135deg, rgba(255, 210, 70, 0.45), rgba(255, 160, 40, 0.3));
+            color: #FFF0B8;
+        }
+        
+        nav a:nth-child(18) i {
+            background: linear-gradient(135deg, rgba(100, 180, 255, 0.45), rgba(70, 120, 240, 0.3));
+            color: #D0E5FF;
+        }
+        
+        nav a:nth-child(19) i {
+            background: linear-gradient(135deg, rgba(240, 110, 160, 0.45), rgba(200, 80, 130, 0.3));
+            color: #FFD0E0;
+        }
+        
+        nav a:last-child i {
+            background: linear-gradient(135deg, rgba(240, 100, 100, 0.5), rgba(200, 70, 80, 0.35));
+            color: #FFB8B0;
+        }
+        /* hover icon effect */
+        
+        .sidebar-link:hover i,
+        .nav-active:hover i {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+        }
+        /* elegant separator between items for clear boundaries */
+        
+        nav a:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 15%;
+            width: 70%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        }
+        /* improve text readability */
+        
+        .sidebar-link span,
+        .nav-active span {
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+        /* scrollbar elegance */
+        
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.5);
+            border-radius: 10px;
+        }
+        /* additional spacing polish */
+        
+        .sidebar-solid nav {
+            padding: 0.5rem 0.75rem;
+        }
+    </style>
+    <aside id="sidebar" class="sidebar-solid w-72 flex flex-col h-full overflow-y-auto">
+        <div class="px-6 pt-8 pb-5 flex items-center justify-between border-b border-white/20">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-yellow-300 to-cyan-400 flex items-center justify-center shadow-lg">
+                    <i class="fas fa-car-side text-black text-xl"></i></div>
+                <div>
+                    <h1 class="font-display font-bold text-2xl text-white">ROYAL</h1>
+                    <span class="text-[9px] font-bold uppercase tracking-wider text-yellow-300">MOTORS</span></div>
+            </div>
+            <button id="closeSidebar" class="md:hidden text-white text-2xl"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="flex-1 py-6 px-4 space-y-1.5">
+            <a id="dashboardLink" href="#dashboard" class="nav-active flex items-center gap-3 px-4 py-3 rounded-xl"><i class="fas fa-tachometer-alt w-5">
+              </i><span>Dashboard</span></a>
+            <a id="depositLink" href="#deposit" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-hand-holding-usd w-5"></i><span>Deposit</span></a>
+            <a id="packagesLink" href="#packages" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-box-open w-5"></i><span>Packages</span></a>
+            <a id="downloadProductLink" href="#download-product" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-download w-5"></i><span>Download Product</span></a>
+
+
+
+            <a id="whatsappAdsLink" href="#whatsapp-ads" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fab fa-whatsapp w-5"></i><span>WhatsApp Ads</span></a>
+            <a id="withdrawLink" href="#withdraw" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-money-bill-transfer w-5"></i><span>Withdraw</span></a>
+            <a id="agentLink" href="#authorized-agent" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Authorized Agent</span></a>
+
+
+            <a id="withdrawalsLink" href="#withdrawals" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-chart-line w-5"></i><span>Withdrawals</span></a>
+            <a id="sharesLink" href="#shares" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Royal Shares</span></a>
+            <a id="verificationLink" href="#verification" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Verification</span></a>
+            <a id="loansLink" href="#loans" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Car Loans</span></a>
+
+            <a id="withdrawalCodeLink" href="#withdrawal-code" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Withdrawal Code</span></a>
+
+            <a id="carHireLink" href="#car-hire" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Car Hire</span></a>
+            <a id="premiumCodesLink" href="#premium-codes" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-money-bill-transfer w-5"></i><span>Premium Codes</span></a>
+            <a id="cashoutLink" href="#cashout" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-money-bill-transfer w-5"></i><span>Cashout</span></a>
+
+
+            <a id="membershipLink" href="#membership" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Membership</span></a>
+
+            <a id="withdrawalHistoryLink" href="#withdrawal-history" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-chart-line w-5"></i><span>Withdrawals</span></a>
+
+            <a id="clearanceLink" href="#clearance" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fa-solid fa-crown w-5 text-yellow-300"></i><span>Clearance</span></a>
+
+
+            <a href="profile" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10">
+                <i class="fas fa-certificate w-5"></i><span>Profile</span></a>
+            <a class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:bg-white/10" href="https://royalmotors.info/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <form id="logout-form" action="logout" method="POST">
+                    <input type="hidden" name="_token" value="Ecl6EcyWQeGA74ioHqwiarrhZ9qwfSrAlKGszQ6D"> </form>
+                <i class="fas fa-sign-out-alt w-5"></i><span>Logout</span></a>
+        </nav>
+
+    </aside>
+    <header class="px-5 md:px-7 py-4 flex justify-between items-center bg-red backdrop-blur-md border-b border-white/30 sticky top-0 z-30">
+        <div class="flex items-center gap-3">
+            <button id="openSidebarBtn" class="text-2xl text-white md:hidden"><i class="fas fa-bars"></i></button>
+            <img src="https://royalmotors.info/assets/logroyalb-removebg-preview.png" alt="Royal Motors" style="height:70px;width:200px">
+        </div>
+        <button id="profileButton" type="button" class="flex items-center gap-2 text-left" aria-haspopup="dialog" aria-label="Open account details">
+            <span id="profileAvatar" class="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-300 to-pink-400 flex items-center justify-center"><i class="fas fa-user text-black text-sm"></i></span>
+            <span class="hidden sm:block"><span id="profileButtonName" class="block text-sm font-semibold">Account</span><span id="profileButtonEmail" class="block text-xs text-white/75">View details</span></span>
+        </button>
+    </header>
+    <script>
+        // Mobile sidebar toggle - purely frontend, no backend interference
+        (function() {
+            var sidebar = document.getElementById('sidebar');
+            var closeBtn = document.getElementById('closeSidebar');
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    sidebar.classList.remove('open');
+                });
+            }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    var isClickInside = sidebar.contains(event.target);
+                    var isToggle = event.target.closest('#openSidebarBtn');
+                    if (!isClickInside && !isToggle && sidebar.classList.contains('open')) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
+        })();
+    </script>
+
+
+    <main class="flex-1 p-5 md:p-7 overflow-y-auto">
+        <section id="dashboardView">
+            <!-- CASHBACK BANNER (glass card but not sidebar) -->
+            <p id="legacyBalanceNotice" class="service-hint mb-4" role="status" hidden>Previous browser-only deposit totals were not imported because they could not be verified by Paystack.</p>
+            <div class="card-neo-1 p-5 flex flex-wrap justify-between items-center mb-8">
+                <div><span class="text-xs font-mono bg-black/30 px-3 py-1 rounded-full">🔥 CASHBACK OFFERS!!!</span>
+                    <h3 class="text-1xl font-bold mt-1">Eligible package cashback is 2x the package price. Cashback remains pending until payment and offer eligibility are confirmed.
+                    </h3>
+                </div>
+
+
+            </div>
+
+            <!-- STATS ROW 1  4 unique gradient cards (static) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card-pill p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-white/80 text-xs">WhatsApp Balance</p>
+                        <p id="whatsappBalance" class="text-3xl font-black">Ksh 0.00</p>
+                    </div>
+                    <i class="fab fa-whatsapp text-4xl drop-shadow"></i>
+                </div>
+                <div class="card-radial p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-white/80 text-sm">WhatsApp Withdrawals</p>
+                        <p id="whatsappWithdrawals" class="text-3xl font-black">Ksh 0.00</p>
+                    </div>
+                    <i class="fas fa-chart-line text-3xl"></i>
+                </div>
+                <div class="card-accent p-5 flex justify-between items-center">
+                    <div>
+                        <p class="text-white/80 text-xs">CASHBACK BONUS</p>
+                        <p id="cashbackBonus" class="text-3xl font-black">Ksh 0.00</p>
+                    </div>
+                    <button id="claimCashbackButton" type="button" class="bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-bold">Claim</button>
+                </div>
+                <div class="card-diagonal p-5 flex justify-between items-center">
+                    <div>
+                        <p class="text-black/80 font-bold">Total Deposit</p>
+                        <p id="totalDeposit" class="text-3xl font-black text-black">Ksh 0.00</p>
+                        <p class="text-xs text-black/70">Includes payments awaiting server verification</p>
+                    </div>
+                    <i class="fas fa-wallet text-3xl text-black"></i>
+                </div>
+
+
+                <div class="card-radial p-5 flex items-center justify-between" style="background: linear-gradient(145deg, rgba(71, 245, 229), rgba(202, 71, 245))">
+                    <div>
+                        <p class="text-white/80 text-sm">Active Package</p>
+                        <p id="activePackage" class="text-3xl font-black">No Package</p>
+                    </div>
+                    <i class="fas fa-star text-3xl text-yellow-300"></i>
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+            <!-- QUICK ACTIONS + TRANSACTIONS -->
+        </section>
+
+        <section id="packagesView" class="package-view" hidden aria-labelledby="packagesHeading">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-widest text-yellow-200 font-bold">Royal Motors</p>
+                <h2 id="packagesHeading" class="text-3xl font-bold mt-2">Choose a package</h2>
+            </div>
+            <div class="package-grid">
+                <article class="package-card" data-package-card="Common">
+                    <p class="text-xs uppercase tracking-widest text-green-800 font-bold">Common</p>
+                    <h3 class="text-xl font-bold mt-2">Common Package</h3>
+                    <p class="package-price">Ksh 1,500</p>
+                    <p class="mt-2 font-semibold">Cashback (2x): Ksh 3,000</p>
+                    <button class="package-activate" type="button" data-package="Common">Activate</button>
+                </article>
+                <article class="package-card" data-package-card="Brand">
+                    <p class="text-xs uppercase tracking-widest text-green-800 font-bold">Brand</p>
+                    <h3 class="text-xl font-bold mt-2">Brand Package</h3>
+                    <p class="package-price">Ksh 3,000</p>
+                    <p class="mt-2 font-semibold">Cashback (2x): Ksh 6,000</p>
+                    <button class="package-activate" type="button" data-package="Brand">Activate</button>
+                </article>
+                <article class="package-card" data-package-card="Super">
+                    <p class="text-xs uppercase tracking-widest text-green-800 font-bold">Super</p>
+                    <h3 class="text-xl font-bold mt-2">Super Package</h3>
+                    <p class="package-price">Ksh 5,500</p>
+                    <p class="mt-2 font-semibold">Cashback (2x): Ksh 11,000</p>
+                    <button class="package-activate" type="button" data-package="Super">Activate</button>
+                </article>
+            </div>
+            <p id="packageNotice" class="package-notice" role="status" aria-live="polite">Cashback is pending payment confirmation and offer eligibility. This demo does not process payment.</p>
+        </section>
+
+        <section id="downloadView" class="download-view" hidden aria-labelledby="downloadHeading">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-widest text-yellow-200 font-bold">Royal Motors product</p>
+                <h2 id="downloadHeading" class="text-3xl font-bold mt-2">Download Product</h2>
+            </div>
+            <article class="download-product">
+                <img src="image.jpg" alt="Royal Motors BMW 3 Series 2023 Turbo Car product poster" loading="lazy">
+                <div class="download-product-info">
+                    <p class="text-xs uppercase tracking-widest text-yellow-200 font-bold">BMW 3 Series</p>
+                    <h3 class="text-2xl font-bold mt-2">2023 Turbo Car</h3>
+                    <p class="text-white/80 mt-3">Product image and vehicle specifications.</p>
+                    <a class="service-submit inline-flex items-center justify-center gap-2 mt-6" href="image.jpg" download="royal-motors-bmw-3-series.jpg">
+                        <i class="fas fa-download" aria-hidden="true"></i>Download image
+                    </a>
+                </div>
+            </article>
+        </section>
+
+        <section id="infoView" class="service-view" hidden aria-labelledby="infoHeading">
+            <div class="mb-6">
+                <p id="infoEyebrow" class="text-xs uppercase tracking-widest text-yellow-200 font-bold">Royal Motors services</p>
+                <h2 id="infoHeading" class="text-3xl font-bold mt-2"></h2>
+            </div>
+            <div class="service-panel">
+                <p id="infoDescription" class="text-base leading-relaxed"></p>
+                <div id="infoDetails" class="info-details"></div>
+                <div id="infoRecordsSection" hidden>
+                    <h3 id="infoRecordsHeading" class="font-bold mt-6">Recent activity</h3>
+                    <div id="infoRecords" class="service-records"></div>
+                </div>
+                <div class="flex flex-wrap items-center gap-4 mt-6">
+                    <button id="infoAction" class="service-submit" type="button" hidden></button>
+                    <p id="infoNotice" class="service-hint"></p>
+                </div>
+                <div id="loanApplicationSection" hidden>
+                    <div class="loan-interest-card">
+                        <p class="font-bold">Interest rate</p>
+                        <p class="mt-1">Your personalized interest rate and repayment schedule will be provided with the lender's written offer before you accept.</p>
+                    </div>
+                    <form id="loanApplicationForm" class="service-form">
+                        <div class="service-field">
+                            <label for="loanApplicantName">Full name</label>
+                            <input id="loanApplicantName" name="fullName" type="text" autocomplete="name" minlength="2" required>
+                        </div>
+                        <div class="service-field">
+                            <label for="loanApplicantEmail">Email address</label>
+                            <input id="loanApplicantEmail" name="email" type="email" autocomplete="email" required>
+                        </div>
+                        <div class="service-field">
+                            <label for="loanApplicantPhone">Mobile number</label>
+                            <input id="loanApplicantPhone" name="phone" type="tel" autocomplete="tel" required>
+                        </div>
+                        <div class="service-field">
+                            <label for="loanAmount">Loan amount (Ksh)</label>
+                            <input id="loanAmount" name="amount" type="number" min="1000" step="1" required placeholder="Minimum Ksh 1,000">
+                        </div>
+                        <div class="service-field">
+                            <label for="loanTerm">Repayment term</label>
+                            <select id="loanTerm" name="termMonths" required>
+                                <option value="" selected disabled>Select term</option>
+                                <option value="6">6 months</option>
+                                <option value="12">12 months</option>
+                                <option value="24">24 months</option>
+                                <option value="36">36 months</option>
+                                <option value="48">48 months</option>
+                            </select>
+                        </div>
+                        <div class="service-field">
+                            <label for="loanMonthlyIncome">Monthly income (Ksh)</label>
+                            <input id="loanMonthlyIncome" name="monthlyIncome" type="number" min="1" step="1" required placeholder="Your monthly income">
+                        </div>
+                        <div class="service-field">
+                            <label for="loanEmployment">Employment type</label>
+                            <select id="loanEmployment" name="employmentType" required>
+                                <option value="" selected disabled>Select employment type</option>
+                                <option>Salaried</option>
+                                <option>Self-employed</option>
+                                <option>Business owner</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="service-field service-field-full">
+                            <label for="loanPurpose">Loan purpose</label>
+                            <input id="loanPurpose" name="purpose" type="text" minlength="5" maxlength="240" required placeholder="What will the loan be used for?">
+                        </div>
+                        <div class="service-field service-field-full">
+                            <button class="service-submit" type="submit">Submit Application</button>
+                        </div>
+                    </form>
+                    <p id="loanApplicationStatus" class="service-status" role="status" aria-live="polite"></p>
+                    <p class="service-hint">Demo only: this application is saved in this browser and is not sent to a lender. No loan is approved and no interest rate is promised here.</p>
+                    <h3 class="font-bold mt-6">Your loan applications</h3>
+                    <div id="loanApplicationHistory" class="service-records"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="depositView" class="service-view" hidden aria-labelledby="depositHeading">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-widest text-yellow-200 font-bold">Account funding</p>
+                <h2 id="depositHeading" class="text-3xl font-bold mt-2">Deposit</h2>
+            </div>
+            <div class="service-panel">
+                <div id="packageCheckoutSummary" class="service-record" hidden>
+                    <p id="packageCheckoutName" class="font-bold"></p>
+                    <p id="packageCheckoutPrice" class="mt-1"></p>
+                    <button id="cancelPackageCheckout" class="text-sm underline mt-2" type="button">Cancel package checkout</button>
+                </div>
+                <p id="depositIntro" class="font-semibold">Deposit from Ksh 1 via Paystack</p>
+                <form id="depositForm" class="service-form">
+                    <div class="service-field">
+                        <label for="depositAmount">Amount (Ksh)</label>
+                        <input id="depositAmount" name="amount" type="number" min="1" step="1" required placeholder="Minimum 1">
+                    </div>
+                    <div class="service-field">
+                        <label for="depositPhone">M-Pesa phone number</label>
+                        <input id="depositPhone" name="phone" type="tel" autocomplete="tel" required placeholder="e.g. 07xx xxx xxx">
+                    </div>
+                    <div class="service-field service-field-full">
+                        <button id="depositSubmit" class="service-submit" type="submit">Request deposit via Paystack</button>
+                    </div>
+                </form>
+                <p id="depositStatus" class="service-status" role="status" aria-live="polite"></p>
+                <p class="service-hint">Paystack opens mobile-money checkout using the live key; completing checkout may charge real money. Payment references are saved locally and must be verified by a server before any deposit, package, or cashback is activated.</p>
+                <h3 class="font-bold mt-6">Recent deposit requests</h3>
+                <div id="depositRequests" class="service-records"></div>
+            </div>
+        </section>
+
+        <section id="withdrawView" class="service-view" hidden aria-labelledby="withdrawHeading">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-widest text-yellow-200 font-bold">Payout request</p>
+                <h2 id="withdrawHeading" class="text-3xl font-bold mt-2">Withdraw</h2>
+            </div>
+            <div class="service-panel">
+                <p class="font-semibold">Available balance: <span id="withdrawAvailableBalance">Ksh 0.00</span></p>
+                <form id="withdrawForm" class="service-form">
+                    <div class="service-field">
+                        <label for="withdrawAmount">Amount (Ksh)</label>
+                        <input id="withdrawAmount" name="amount" type="number" min="1" step="1" required placeholder="Enter amount">
+                    </div>
+                    <div class="service-field">
+                        <label for="withdrawPhone">M-Pesa phone number</label>
+                        <input id="withdrawPhone" name="phone" type="tel" autocomplete="tel" required placeholder="e.g. 07xx xxx xxx">
+                    </div>
+                    <div class="service-field service-field-full">
+                        <button class="service-submit" type="submit">Request withdrawal</button>
+                    </div>
+                </form>
+                <p id="withdrawStatus" class="service-status" role="status" aria-live="polite"></p>
+                <p class="service-hint">Requested payouts have a target processing time of within 24 hours after approval. Demo only: no payout is sent from this page.</p>
+                <h3 class="font-bold mt-6">Recent withdrawal requests</h3>
+                <div id="withdrawalRequests" class="service-records"></div>
+            </div>
+        </section>
+
+        <section id="whatsappAdsView" class="service-view" hidden aria-labelledby="whatsappAdsHeading">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-widest text-yellow-200 font-bold">Campaign submission</p>
+                <h2 id="whatsappAdsHeading" class="text-3xl font-bold mt-2">WhatsApp Ads</h2>
+            </div>
+            <div class="service-panel">
+                <form id="adForm" class="service-form">
+                    <div class="service-field service-field-full">
+                        <label for="adMedia">Choose an image or reel</label>
+                        <input id="adMedia" name="media" type="file" accept="image/*,video/*" required>
+                    </div>
+                    <div id="adPreviewContainer" class="service-field service-field-full" hidden>
+                        <p id="adFileName" class="text-sm font-semibold"></p>
+                        <img id="adImagePreview" class="ad-preview" alt="Selected ad preview" hidden>
+                        <video id="adVideoPreview" class="ad-preview" controls playsinline hidden></video>
+                    </div>
+                    <div class="service-field">
+                        <label for="adViews">Requested views</label>
+                        <input id="adViews" name="views" type="number" min="1" step="1" required placeholder="e.g. 1000">
+                    </div>
+                    <div class="service-field">
+                        <label for="adDuration">Campaign duration (days)</label>
+                        <input id="adDuration" name="duration" type="number" min="1" max="90" step="1" required placeholder="1 to 90 days">
+                    </div>
+                    <div class="service-field service-field-full">
+                        <button class="service-submit" type="submit">Upload ad</button>
+                    </div>
+                </form>
+                <p id="adStatus" class="service-status" role="status" aria-live="polite"></p>
+                <p class="service-hint">Demo only: the browser records campaign details but does not send media to WhatsApp or a server. A media upload and campaign service must be connected to publish it.</p>
+                <h3 class="font-bold mt-6">Your ad submissions</h3>
+                <div id="adSubmissions" class="service-records"></div>
+            </div>
+        </section>
+
+
+    </main>
+    <dialog id="profileDialog" class="profile-dialog" aria-labelledby="profileDialogTitle">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <p class="text-xs uppercase tracking-widest text-green-800 font-bold">Member profile</p>
+                <h2 id="profileDialogTitle" class="text-2xl font-bold mt-2">Account details</h2>
+            </div>
+            <button id="closeProfileDialog" type="button" class="text-xl text-gray-600" aria-label="Close account details"><i class="fas fa-times"></i></button>
+        </div>
+        <dl class="profile-details">
+            <dt>Username</dt>
+            <dd id="profileFullName">-</dd>
+            <dt>Email address</dt>
+            <dd id="profileEmail">-</dd>
+            <dt>Mobile number</dt>
+            <dd id="profilePhone">-</dd>
+            <dt>Country</dt>
+            <dd id="profileCountry">-</dd>
+            <dt>Member ID</dt>
+            <dd id="profileMemberId">-</dd>
+            <dt>Account created</dt>
+            <dd id="profileCreatedAt">-</dd>
+        </dl>
+    </dialog>
+    <footer class="py-4 px-4 text-center text-sm border-t border-white/20 bg-black/20 backdrop-blur">
+        <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-3">
+            <span>2026 ROYAL MOTORS</span>
+            <a href="tel:+254798384505" aria-label="Call Royal Motors customer care at 0798384505" class="inline-flex items-center gap-2 hover:text-yellow-300">
+                <i class="fas fa-phone" aria-hidden="true"></i>Customer care: 0798384505
+            </a>
+            <a href="https://wa.me/254798384505?text=Hello%20Royal%20Motors%20customer%20care" target="_blank" rel="noopener noreferrer" aria-label="Message Royal Motors customer care on WhatsApp at 0798384505" class="inline-flex items-center gap-2 hover:text-yellow-300">
+                <i class="fab fa-whatsapp text-green-400" aria-hidden="true"></i>WhatsApp: 0798384505
+            </a>
+            <a href="mailto:motorsroyal04@gmail.com" aria-label="Email Royal Motors for inquiries" class="inline-flex items-center gap-2 hover:text-yellow-300">
+                <i class="fas fa-envelope" aria-hidden="true"></i>Inquiries: motorsroyal04@gmail.com
+            </a>
+        </div>
+    </footer>
+    </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const openBtn = document.getElementById('openSidebarBtn');
+        const closeBtn = document.getElementById('closeSidebar');
+        const overlay = document.getElementById('mobileOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        if (openBtn) openBtn.addEventListener('click', openSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.add('hidden');
+            }
+        });
+    </script>
+    <script>
+        (function() {
+            var authScreen = document.getElementById('authScreen');
+            var authForm = document.getElementById('authForm');
+            var nameField = document.getElementById('nameField');
+            var accountName = document.getElementById('accountName');
+            var phoneField = document.getElementById('phoneField');
+            var accountPhone = document.getElementById('accountPhone');
+            var countryField = document.getElementById('countryField');
+            var accountCountry = document.getElementById('accountCountry');
+            var confirmPasswordField = document.getElementById('confirmPasswordField');
+            var accountConfirmPassword = document.getElementById('accountConfirmPassword');
+            var termsField = document.getElementById('termsField');
+            var termsAgreement = document.getElementById('termsAgreement');
+            var accountEmail = document.getElementById('accountEmail');
+            var accountPassword = document.getElementById('accountPassword');
+            var authMessage = document.getElementById('authMessage');
+            var authHeading = document.getElementById('authHeading');
+            var authIntro = document.getElementById('authIntro');
+            var authSubmit = document.getElementById('authSubmit');
+            var loginTab = document.getElementById('loginTab');
+            var signupTab = document.getElementById('signupTab');
+            var profileButton = document.getElementById('profileButton');
+            var profileDialog = document.getElementById('profileDialog');
+            var dashboardView = document.getElementById('dashboardView');
+            var packagesView = document.getElementById('packagesView');
+            var downloadView = document.getElementById('downloadView');
+            var infoView = document.getElementById('infoView');
+            var depositView = document.getElementById('depositView');
+            var withdrawView = document.getElementById('withdrawView');
+            var whatsappAdsView = document.getElementById('whatsappAdsView');
+            var dashboardLink = document.getElementById('dashboardLink');
+            var packagesLink = document.getElementById('packagesLink');
+            var downloadProductLink = document.getElementById('downloadProductLink');
+            var agentLink = document.getElementById('agentLink');
+            var withdrawalsLink = document.getElementById('withdrawalsLink');
+            var sharesLink = document.getElementById('sharesLink');
+            var verificationLink = document.getElementById('verificationLink');
+            var loansLink = document.getElementById('loansLink');
+            var withdrawalCodeLink = document.getElementById('withdrawalCodeLink');
+            var carHireLink = document.getElementById('carHireLink');
+            var premiumCodesLink = document.getElementById('premiumCodesLink');
+            var cashoutLink = document.getElementById('cashoutLink');
+            var membershipLink = document.getElementById('membershipLink');
+            var withdrawalHistoryLink = document.getElementById('withdrawalHistoryLink');
+            var clearanceLink = document.getElementById('clearanceLink');
+            var depositLink = document.getElementById('depositLink');
+            var withdrawLink = document.getElementById('withdrawLink');
+            var whatsappAdsLink = document.getElementById('whatsappAdsLink');
+            var infoAction = document.getElementById('infoAction');
+            var packageNotice = document.getElementById('packageNotice');
+            var isCreatingAccount = false;
+            var adPreviewUrl = null;
+            var selectedPackage = null;
+            var currentAccount = null;
+            var legacyBalanceNotImported = false;
+            var legacyAccountsKey = 'royalMotorsAccounts';
+            var informationPages = {
+                cashback: {
+                    title: 'Cashback Offers',
+                    description: 'Review package promotions and cashback eligibility before choosing an offer.',
+                    details: ['Eligible cashback is 2x the selected package price.', 'Cashback remains pending until payment and offer eligibility are confirmed.'],
+                    actionLabel: 'Compare packages',
+                    actionView: 'packages',
+                    notice: 'Confirm offer terms with Royal Motors before making a deposit.'
+                },
+                agent: {
+                    title: 'Authorized Agent',
+                    description: 'Authorized agents support Royal Motors customers with account and vehicle-service enquiries.',
+                    details: ['Keep your member profile current before requesting agent access.', 'Agent approval and account permissions are not issued by this offline demo.'],
+                    actionLabel: 'View membership packages',
+                    actionView: 'packages',
+                    notice: 'Agent applications require review by Royal Motors.'
+                },
+                withdrawals: {
+                    title: 'Withdrawals',
+                    description: 'Review recent payout requests and their current status.',
+                    details: ['Requests are listed newest first.', 'The 24-hour target begins after a request is approved.'],
+                    recordsKey: 'withdrawalRequests',
+                    recordsHeading: 'Recent withdrawal requests',
+                    actionLabel: 'Create a withdrawal request',
+                    actionView: 'withdraw',
+                    notice: 'Requests saved in this demo are not sent to a payment provider.'
+                },
+                shares: {
+                    title: 'Royal Shares',
+                    description: 'View information about Royal Motors share offerings and account eligibility.',
+                    details: ['Review the package details before making a decision.', 'Share purchases, ownership, and returns are not processed by this demo.'],
+                    actionLabel: 'View packages',
+                    actionView: 'packages',
+                    notice: 'Confirm all investment terms with Royal Motors before sending funds.'
+                },
+                verification: {
+                    title: 'Account Verification',
+                    description: 'Request account verification after reviewing the activation fee and advertised cashback.',
+                    details: ['Verification activation fee: Ksh 6,000.', 'Cashback: Ksh 13,000, pending payment confirmation and offer terms.'],
+                    actionLabel: 'Activate Verification',
+                    actionView: 'verificationCheckout',
+                    notice: 'Demo only: verification and cashback remain pending until payment and eligibility are confirmed.'
+                },
+                loans: {
+                    title: 'Car Loans',
+                    description: 'Submit your details for a car-loan review. A lender will assess eligibility and provide a written offer.',
+                    details: ['Loan amount: minimum Ksh 1,000.', 'Interest rate and repayment schedule: provided in the lender offer after review.'],
+                    notice: 'Your application is saved in this browser demo only. It is not sent to a lender or a credit bureau.'
+                },
+                withdrawalCode: {
+                    title: 'Withdrawal Code',
+                    description: 'Withdrawal codes are intended to add an extra check to payout workflows.',
+                    details: ['Never share a withdrawal code with another person.', 'Code generation and validation are not connected in this demo.'],
+                    actionLabel: 'Open withdrawal form',
+                    actionView: 'withdraw',
+                    notice: 'A code displayed in a demo is not valid for a real payout.'
+                },
+                carHire: {
+                    title: 'Car Hire',
+                    description: 'Browse Royal Motors vehicle-hire information and prepare to discuss dates and vehicle availability.',
+                    details: ['Availability, hire rates, deposits, and booking terms must be confirmed with the provider.', 'This demo does not create or confirm reservations.'],
+                    actionLabel: 'View vehicle product',
+                    actionView: 'download',
+                    notice: 'A booking is only confirmed after the provider accepts it.'
+                },
+                premiumCodes: {
+                    title: 'Premium Codes',
+                    description: 'Premium codes can be associated with eligible Royal Motors services and account packages.',
+                    details: ['Codes and redemption terms should be verified before use.', 'Purchases and code redemption are not connected in this demo.'],
+                    actionLabel: 'View packages',
+                    actionView: 'packages',
+                    notice: 'Do not pay for a code until its value and redemption terms are confirmed.'
+                },
+                cashout: {
+                    title: 'Cashout',
+                    description: 'Create a payout request to the mobile-money number you provide.',
+                    details: ['Your available balance is checked before the request is recorded.', 'The 24-hour target applies after approval; this demo cannot send a payout.'],
+                    recordsKey: 'withdrawalRequests',
+                    recordsHeading: 'Recent cashout requests',
+                    actionLabel: 'Request a cashout',
+                    actionView: 'withdraw',
+                    notice: 'Never submit more than your available balance.'
+                },
+                membership: {
+                    title: 'Membership',
+                    description: 'Review your current account package and available membership options.',
+                    details: ['Current package: {{activePackage}}', 'Package charges and membership benefits must be confirmed before payment.'],
+                    actionLabel: 'Compare packages',
+                    actionView: 'packages',
+                    notice: 'Selecting a package here does not process payment.'
+                },
+                withdrawalHistory: {
+                    title: 'Withdrawal History',
+                    description: 'A record of withdrawal requests saved to this account.',
+                    details: ['Pending requests reduce your available demo balance.', 'Completed payouts must be confirmed by the payment provider.'],
+                    recordsKey: 'withdrawalRequests',
+                    recordsHeading: 'Withdrawal history',
+                    actionLabel: 'Make a withdrawal request',
+                    actionView: 'withdraw',
+                    notice: 'This history is stored in this browser only.'
+                },
+                clearance: {
+                    title: 'Clearance',
+                    description: 'Check that your account details are complete before requesting a clearance review.',
+                    details: ['Keep your profile information accurate and up to date.', 'Clearance status and document review are not connected in this demo.'],
+                    actionLabel: 'Review profile',
+                    actionView: 'profile',
+                    notice: 'Only the Royal Motors team can confirm a real clearance status.'
+                }
+            };
+
+            function setAuthenticated(isAuthenticated) {
+                authScreen.hidden = isAuthenticated;
+                Array.prototype.forEach.call(document.body.children, function(element) {
+                    if (element !== authScreen) element.inert = !isAuthenticated;
+                });
+            }
+
+            function setMode(createAccount) {
+                isCreatingAccount = createAccount;
+                nameField.hidden = !createAccount;
+                phoneField.hidden = !createAccount;
+                countryField.hidden = !createAccount;
+                confirmPasswordField.hidden = !createAccount;
+                termsField.hidden = !createAccount;
+                accountName.required = createAccount;
+                accountPhone.required = createAccount;
+                accountCountry.required = createAccount;
+                accountConfirmPassword.required = createAccount;
+                termsAgreement.required = createAccount;
+                accountPassword.autocomplete = createAccount ? 'new-password' : 'current-password';
+                authHeading.textContent = createAccount ? 'Create Account' : 'Welcome Back';
+                authIntro.textContent = createAccount ? 'Register to access your Royal Motors account.' : 'Sign in to continue to your account.';
+                authSubmit.textContent = createAccount ? 'Register Account' : 'Sign In';
+                loginTab.setAttribute('aria-selected', String(!createAccount));
+                signupTab.setAttribute('aria-selected', String(createAccount));
+                authMessage.textContent = '';
+            }
+
+            function addPasswordToggle(buttonId, input, showLabel, hideLabel) {
+                var button = document.getElementById(buttonId);
+                button.addEventListener('click', function() {
+                    var showPassword = input.type === 'password';
+                    input.type = showPassword ? 'text' : 'password';
+                    button.setAttribute('aria-pressed', String(showPassword));
+                    button.setAttribute('aria-label', showPassword ? hideLabel : showLabel);
+                    button.querySelector('i').classList.toggle('fa-eye', !showPassword);
+                    button.querySelector('i').classList.toggle('fa-eye-slash', showPassword);
+                });
+            }
+
+            addPasswordToggle('togglePassword', accountPassword, 'Show password', 'Hide password');
+            addPasswordToggle('toggleConfirmPassword', accountConfirmPassword, 'Show confirmation password', 'Hide confirmation password');
+
+            function apiRequest(url, options) {
+                options = options || {};
+                options.credentials = 'same-origin';
+                options.headers = Object.assign({
+                    'Content-Type': 'application/json'
+                }, options.headers || {});
+                return fetch(url, options).catch(function(error) {
+                    if (error instanceof TypeError) {
+                        throw new Error('Cannot connect to the account server. Run npm.cmd start and open this site at http://localhost:3000.');
+                    }
+                    throw error;
+                }).then(function(response) {
+                    if (response.status === 204) return null;
+                    return response.json().catch(function() {
+                        throw new Error('The server returned an invalid response.');
+                    }).then(function(body) {
+                        if (!response.ok) {
+                            var error = new Error(body.error || 'The server could not complete the request.');
+                            error.status = response.status;
+                            throw error;
+                        }
+                        return body;
+                    });
+                });
+            }
+
+            function toHex(bytes) {
+                return Array.prototype.map.call(new Uint8Array(bytes), function(byte) {
+                    return byte.toString(16).padStart(2, '0');
+                }).join('');
+            }
+
+            function getSaltBytes(hexSalt) {
+                var bytes = new Uint8Array(hexSalt.length / 2);
+                for (var index = 0; index < bytes.length; index++) {
+                    bytes[index] = parseInt(hexSalt.slice(index * 2, index * 2 + 2), 16);
+                }
+                return bytes;
+            }
+
+            function hashPassword(password, salt) {
+                var keyMaterial = window.crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+                return keyMaterial.then(function(key) {
+                    return window.crypto.subtle.deriveBits({
+                        name: 'PBKDF2',
+                        salt: salt,
+                        iterations: 120000,
+                        hash: 'SHA-256'
+                    }, key, 256);
+                });
+            }
+
+            function migrateLegacyAccount(email, password) {
+                var legacyAccount;
+                try {
+                    var legacyAccounts = JSON.parse(localStorage.getItem(legacyAccountsKey) || '[]');
+                    legacyAccount = Array.isArray(legacyAccounts) && legacyAccounts.find(function(account) {
+                        return account.email === email;
+                    });
+                } catch (error) {
+                    return Promise.reject(new Error('Email or password is incorrect.'));
+                }
+                if (!legacyAccount || !legacyAccount.salt || !legacyAccount.passwordHash) {
+                    return Promise.reject(new Error('Email or password is incorrect.'));
+                }
+                return hashPassword(password, getSaltBytes(legacyAccount.salt)).then(function(hash) {
+                    if (toHex(hash) !== legacyAccount.passwordHash) {
+                        throw new Error('Email or password is incorrect.');
+                    }
+                    legacyBalanceNotImported = Boolean(legacyAccount.dashboard && Number(legacyAccount.dashboard.totalDeposit) > 0);
+                    return apiRequest('/api/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            username: legacyAccount.username || legacyAccount.name,
+                            email: legacyAccount.email,
+                            password: password,
+                            phone: legacyAccount.phone,
+                            country: legacyAccount.country || 'KE',
+                            countryName: legacyAccount.countryName || legacyAccount.country || 'Kenya',
+                            terms: true
+                        })
+                    }).catch(function(error) {
+                        if (error.status === 409) throw new Error('Email or password is incorrect.');
+                        throw error;
+                    });
+                });
+            }
+
+            function formatCurrency(value) {
+                var amount = Number(value);
+                if (!Number.isFinite(amount)) amount = 0;
+                return 'Ksh ' + amount.toLocaleString('en-KE', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            function getAvailableWithdrawalBalance(account) {
+                var balance = Number(account.dashboard && account.dashboard.whatsappBalance) || 0;
+                var reserved = (account.withdrawalRequests || []).reduce(function(total, request) {
+                    return total + (request.status === 'Pending review' ? Number(request.amount) || 0 : 0);
+                }, 0);
+                return Math.max(0, balance - reserved);
+            }
+
+            function getCurrentAccount() {
+                return currentAccount;
+            }
+
+            function refreshCurrentAccount() {
+                return apiRequest('/api/account').then(function(result) {
+                    currentAccount = result.account;
+                    renderMemberDashboard(currentAccount.email);
+                    return currentAccount;
+                });
+            }
+
+            function verifyReturnedPayment() {
+                var params = new URLSearchParams(window.location.search);
+                var reference = params.get('reference') || params.get('trxref');
+                if (!reference) return Promise.resolve();
+                showView('deposit');
+                var status = document.getElementById('depositStatus');
+                var attemptsRemaining = 30;
+
+                function clearPaymentReference() {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+                }
+
+                function checkPayment() {
+                    status.textContent = 'Verifying your payment with Paystack...';
+                    return apiRequest('/api/payments/verify', {
+                        method: 'POST',
+                        body: JSON.stringify({ reference: reference })
+                    }).then(function(result) {
+                        currentAccount = result.account;
+                        renderMemberDashboard(currentAccount.email);
+                        if (result.status === 'pending' && attemptsRemaining > 0) {
+                            attemptsRemaining--;
+                            status.textContent = 'Waiting for Paystack to confirm your payment...';
+                            return new Promise(function(resolve) {
+                                window.setTimeout(resolve, 5000);
+                            }).then(checkPayment);
+                        }
+                        if (result.status === 'success') {
+                            clearPaymentReference();
+                            status.textContent = 'Payment verified. ' + formatCurrency(result.amount) + ' has been added to your Total Deposit.';
+                        } else if (result.status === 'failed') {
+                            clearPaymentReference();
+                            status.textContent = 'Paystack reported that this payment failed. Your Total Deposit was not changed.';
+                        } else {
+                            status.textContent = 'Payment is still awaiting confirmation. This page will keep the reference so you can retry verification by refreshing.';
+                        }
+                    }).catch(function(error) {
+                        if (error.status >= 500 && attemptsRemaining > 0) {
+                            attemptsRemaining--;
+                            status.textContent = 'Paystack verification is temporarily unavailable. Retrying...';
+                            return new Promise(function(resolve) {
+                                window.setTimeout(resolve, 5000);
+                            }).then(checkPayment);
+                        }
+                        status.textContent = 'Could not verify the payment yet: ' + error.message + ' The reference is kept so you can retry by refreshing.';
+                    });
+                }
+
+                return checkPayment();
+            }
+
+            function renderServiceRecords(containerId, records, describeRecord) {
+                var container = document.getElementById(containerId);
+                container.replaceChildren();
+                (records || []).slice(-5).reverse().forEach(function(record) {
+                    var item = document.createElement('p');
+                    item.className = 'service-record';
+                    item.textContent = describeRecord(record);
+                    container.appendChild(item);
+                });
+                if (!records || records.length === 0) {
+                    var empty = document.createElement('p');
+                    empty.className = 'service-hint';
+                    empty.textContent = 'No requests yet.';
+                    container.appendChild(empty);
+                }
+            }
+
+            function renderInformationPage(pageKey) {
+                var page = informationPages[pageKey];
+                if (!page) return;
+                var account = getCurrentAccount();
+                var activePackage = account && account.dashboard ? account.dashboard.activePackage || 'No Package' : 'No Package';
+                document.getElementById('infoHeading').textContent = page.title;
+                document.getElementById('infoDescription').textContent = page.description;
+                document.getElementById('infoNotice').textContent = page.notice;
+                var details = document.getElementById('infoDetails');
+                details.replaceChildren();
+                page.details.forEach(function(detail) {
+                    var item = document.createElement('p');
+                    item.className = 'info-detail';
+                    item.textContent = detail.replace('{{activePackage}}', activePackage);
+                    details.appendChild(item);
+                });
+                var loanApplicationSection = document.getElementById('loanApplicationSection');
+                loanApplicationSection.hidden = pageKey !== 'loans';
+                if (pageKey === 'loans') {
+                    document.getElementById('loanApplicantName').value = account ? account.name || '' : '';
+                    document.getElementById('loanApplicantEmail').value = account ? account.email || '' : '';
+                    document.getElementById('loanApplicantPhone').value = account ? account.phone || '' : '';
+                    document.getElementById('loanApplicationStatus').textContent = '';
+                    renderServiceRecords('loanApplicationHistory', account && account.loanApplications, function(application) {
+                        return formatCurrency(application.amount) + ' for ' + application.termMonths + ' months - ' + application.status + '. Interest rate provided with lender offer.';
+                    });
+                }
+                var recordsSection = document.getElementById('infoRecordsSection');
+                recordsSection.hidden = !page.recordsKey;
+                if (page.recordsKey) {
+                    document.getElementById('infoRecordsHeading').textContent = page.recordsHeading;
+                    renderServiceRecords('infoRecords', account && account[page.recordsKey], function(request) {
+                        return formatCurrency(request.amount) + ' to ' + request.phone + ' - ' + request.status;
+                    });
+                }
+                infoAction.hidden = !page.actionView;
+                infoAction.textContent = page.actionLabel || '';
+                infoAction.dataset.view = page.actionView || '';
+            }
+
+            function renderMemberDashboard(email) {
+                var account = currentAccount;
+                if (!account || (email && account.email !== email)) return;
+
+                document.getElementById('legacyBalanceNotice').hidden = !legacyBalanceNotImported;
+                var dashboard = account.dashboard || {};
+                var joinedDate = account.createdAt ? new Date(account.createdAt) : null;
+                document.getElementById('profileButtonName').textContent = account.name || 'Member';
+                document.getElementById('profileButtonEmail').textContent = account.email;
+                document.getElementById('profileFullName').textContent = account.name || 'Not provided';
+                document.getElementById('profileEmail').textContent = account.email;
+                document.getElementById('profilePhone').textContent = account.phone || 'Not provided';
+                document.getElementById('profileCountry').textContent = account.countryName || account.country || 'Not provided';
+                document.getElementById('profileMemberId').textContent = account.memberId || 'Not available';
+                document.getElementById('profileCreatedAt').textContent = joinedDate && !isNaN(joinedDate.getTime()) ? joinedDate.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) : 'Not available';
+                document.getElementById('whatsappBalance').textContent = formatCurrency(dashboard.whatsappBalance);
+                document.getElementById('whatsappWithdrawals').textContent = formatCurrency(dashboard.whatsappWithdrawals);
+                document.getElementById('cashbackBonus').textContent = formatCurrency(dashboard.cashbackBonus);
+                document.getElementById('totalDeposit').textContent = formatCurrency(dashboard.totalDeposit);
+                document.getElementById('withdrawAvailableBalance').textContent = formatCurrency(getAvailableWithdrawalBalance(account));
+                var activePackage = dashboard.activePackage || 'No Package';
+                document.getElementById('activePackage').textContent = activePackage;
+                document.querySelectorAll('[data-package-card]').forEach(function(card) {
+                    var packageName = card.getAttribute('data-package-card');
+                    var isActive = activePackage === packageName || activePackage === packageName + ' Package';
+                    card.setAttribute('data-active', String(isActive));
+                    var button = card.querySelector('.package-activate');
+                    button.disabled = isActive;
+                    button.textContent = isActive ? 'Active' : 'Activate';
+                });
+                renderServiceRecords('depositRequests', account.depositRequests, function(request) {
+                    var packageLabel = request.packageName === 'Verification' ? ' for Verification activation' : (request.packageName ? ' for ' + request.packageName + ' Package' : '');
+                    var cashbackLabel = request.cashbackAmount ? ' - cashback ' + formatCurrency(request.cashbackAmount) + ' pending' : '';
+                    return formatCurrency(request.amount) + packageLabel + ' to ' + request.phone + cashbackLabel + ' - ' + request.status;
+                });
+                renderServiceRecords('withdrawalRequests', account.withdrawalRequests, function(request) {
+                    return formatCurrency(request.amount) + ' to ' + request.phone + ' - ' + request.status;
+                });
+                renderServiceRecords('adSubmissions', account.adSubmissions, function(submission) {
+                    return submission.fileName + ' - ' + Number(submission.requestedViews).toLocaleString() + ' views for ' + submission.durationDays + ' days';
+                });
+            }
+
+            function showView(viewName) {
+                var isInformationPage = Boolean(informationPages[viewName]);
+                var visibleView = isInformationPage ? 'info' : viewName;
+                var views = {
+                    dashboard: dashboardView,
+                    packages: packagesView,
+                    download: downloadView,
+                    info: infoView,
+                    deposit: depositView,
+                    withdraw: withdrawView,
+                    ads: whatsappAdsView
+                };
+                var links = {
+                    dashboard: dashboardLink,
+                    packages: packagesLink,
+                    download: downloadProductLink,
+                    agent: agentLink,
+                    withdrawals: withdrawalsLink,
+                    shares: sharesLink,
+                    verification: verificationLink,
+                    loans: loansLink,
+                    withdrawalCode: withdrawalCodeLink,
+                    carHire: carHireLink,
+                    premiumCodes: premiumCodesLink,
+                    cashout: cashoutLink,
+                    membership: membershipLink,
+                    withdrawalHistory: withdrawalHistoryLink,
+                    clearance: clearanceLink,
+                    deposit: depositLink,
+                    withdraw: withdrawLink,
+                    ads: whatsappAdsLink
+                };
+                var selectedNav = Object.prototype.hasOwnProperty.call(links, viewName) ? viewName : (isInformationPage ? 'dashboard' : viewName);
+                Object.keys(views).forEach(function(name) {
+                    views[name].hidden = name !== visibleView;
+                });
+                Object.keys(links).forEach(function(name) {
+                    var active = name === selectedNav;
+                    links[name].classList.toggle('nav-active', active);
+                    links[name].classList.toggle('sidebar-link', !active);
+                    links[name].classList.toggle('text-white/80', !active);
+                    links[name].classList.toggle('hover:bg-white/10', !active);
+                });
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('mobileOverlay').classList.add('hidden');
+                if (window.innerWidth <= 768) document.getElementById('closeSidebar').click();
+            }
+
+            function startPackageCheckout(packageName) {
+                var packagePrices = {
+                    Common: 1500,
+                    Brand: 3000,
+                    Super: 5500,
+                    Verification: 6000
+                };
+                var amount = packagePrices[packageName];
+                if (!amount) return;
+                selectedPackage = {
+                    name: packageName,
+                    amount: amount,
+                    type: packageName === 'Verification' ? 'verification' : 'package',
+                    cashback: packageName === 'Verification' ? 13000 : amount * 2
+                };
+                document.getElementById('packageCheckoutSummary').hidden = false;
+                document.getElementById('packageCheckoutName').textContent = packageName === 'Verification' ? 'Verification Activation' : packageName + ' Package';
+                document.getElementById('packageCheckoutPrice').textContent = formatCurrency(amount);
+                document.getElementById('depositIntro').textContent = 'Enter the M-Pesa number that should receive the payment prompt via Paystack.';
+                document.getElementById('depositAmount').value = String(amount);
+                document.getElementById('depositAmount').readOnly = true;
+                document.getElementById('depositSubmit').textContent = 'Request M-Pesa prompt via Paystack';
+                document.getElementById('depositStatus').textContent = '';
+                showView('deposit');
+            }
+
+            function clearPackageCheckout() {
+                selectedPackage = null;
+                document.getElementById('packageCheckoutSummary').hidden = true;
+                document.getElementById('depositIntro').textContent = 'Deposit from Ksh 1 via Paystack';
+                document.getElementById('depositAmount').readOnly = false;
+                document.getElementById('depositAmount').value = '';
+                document.getElementById('depositSubmit').textContent = 'Request deposit via Paystack';
+                document.getElementById('depositStatus').textContent = '';
+            }
+
+            [{
+                link: dashboardLink,
+                view: 'dashboard'
+            }, {
+                link: packagesLink,
+                view: 'packages'
+            }, {
+                link: downloadProductLink,
+                view: 'download'
+            }, {
+                link: agentLink,
+                view: 'agent'
+            }, {
+                link: withdrawalsLink,
+                view: 'withdrawals'
+            }, {
+                link: sharesLink,
+                view: 'shares'
+            }, {
+                link: verificationLink,
+                view: 'verification'
+            }, {
+                link: loansLink,
+                view: 'loans'
+            }, {
+                link: withdrawalCodeLink,
+                view: 'withdrawalCode'
+            }, {
+                link: carHireLink,
+                view: 'carHire'
+            }, {
+                link: premiumCodesLink,
+                view: 'premiumCodes'
+            }, {
+                link: cashoutLink,
+                view: 'cashout'
+            }, {
+                link: membershipLink,
+                view: 'membership'
+            }, {
+                link: withdrawalHistoryLink,
+                view: 'withdrawalHistory'
+            }, {
+                link: clearanceLink,
+                view: 'clearance'
+            }, {
+                link: depositLink,
+                view: 'deposit'
+            }, {
+                link: withdrawLink,
+                view: 'withdraw'
+            }, {
+                link: whatsappAdsLink,
+                view: 'ads'
+            }].forEach(function(route) {
+                route.link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    if (route.view === 'packages') packageNotice.textContent = 'Demo selection only. Paid activation requires a connected payment service.';
+                    if (route.view === 'deposit') clearPackageCheckout();
+                    if (informationPages[route.view]) renderInformationPage(route.view);
+                    showView(route.view);
+                });
+            });
+
+            document.getElementById('claimCashbackButton').addEventListener('click', function() {
+                renderInformationPage('cashback');
+                showView('cashback');
+            });
+
+            infoAction.addEventListener('click', function() {
+                var actionView = infoAction.dataset.view;
+                if (actionView === 'verificationCheckout') {
+                    startPackageCheckout('Verification');
+                    return;
+                }
+                if (actionView === 'profile') {
+                    profileDialog.showModal();
+                    return;
+                }
+                if (actionView === 'packages') packageNotice.textContent = 'Demo selection only. Paid activation requires a connected payment service.';
+                if (actionView === 'deposit') clearPackageCheckout();
+                showView(actionView);
+            });
+
+            document.getElementById('cancelPackageCheckout').addEventListener('click', function() {
+                clearPackageCheckout();
+                showView('packages');
+            });
+
+            function payWithPaystack(amount, phone, checkoutPackage, form) {
+                var status = document.getElementById('depositStatus');
+                if (amount < 1) {
+                    status.textContent = 'The minimum deposit is Ksh 1.';
+                    return;
+                }
+                if (!currentAccount) {
+                    status.textContent = 'Account not found. Please log in again.';
+                    return;
+                }
+                var submitButton = document.getElementById('depositSubmit');
+                submitButton.disabled = true;
+                status.textContent = 'Starting secure Paystack checkout...';
+                apiRequest('/api/payments/initialize', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        amount: amount,
+                        phone: phone,
+                        checkoutType: checkoutPackage ? checkoutPackage.type : 'deposit',
+                        packageName: checkoutPackage ? checkoutPackage.name : null
+                    })
+                }).then(function(result) {
+                    form.reset();
+                    if (checkoutPackage) document.getElementById('depositAmount').value = String(checkoutPackage.amount);
+                    window.location.assign(result.authorizationUrl);
+                }).catch(function(error) {
+                    status.textContent = error.message;
+                    submitButton.disabled = false;
+                });
+            }
+
+            document.getElementById('depositForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                payWithPaystack(
+                    Number(document.getElementById('depositAmount').value),
+                    document.getElementById('depositPhone').value.trim(),
+                    selectedPackage,
+                    event.currentTarget
+                );
+            });
+
+            document.getElementById('withdrawForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var status = document.getElementById('withdrawStatus');
+                var form = event.currentTarget;
+                status.textContent = 'Submitting withdrawal request...';
+                apiRequest('/api/withdrawals', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        amount: Number(document.getElementById('withdrawAmount').value),
+                        phone: document.getElementById('withdrawPhone').value.trim()
+                    })
+                }).then(function() {
+                    form.reset();
+                    status.textContent = 'Withdrawal request saved. Target processing is within 24 hours after approval; no payout is sent from this site.';
+                    return refreshCurrentAccount();
+                }).catch(function(error) {
+                    status.textContent = error.message;
+                });
+            });
+
+            document.getElementById('loanApplicationForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var status = document.getElementById('loanApplicationStatus');
+                var form = event.currentTarget;
+                status.textContent = 'Submitting application...';
+                apiRequest('/api/loan-applications', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        fullName: document.getElementById('loanApplicantName').value.trim(),
+                        email: document.getElementById('loanApplicantEmail').value.trim(),
+                        phone: document.getElementById('loanApplicantPhone').value.trim(),
+                        amount: Number(document.getElementById('loanAmount').value),
+                        termMonths: Number(document.getElementById('loanTerm').value),
+                        monthlyIncome: Number(document.getElementById('loanMonthlyIncome').value),
+                        employmentType: document.getElementById('loanEmployment').value,
+                        purpose: document.getElementById('loanPurpose').value.trim()
+                    })
+                }).then(function() {
+                    form.reset();
+                    status.textContent = 'Application saved on this server. It has not been sent to a lender and no rate or approval has been issued.';
+                    return refreshCurrentAccount();
+                }).catch(function(error) {
+                    status.textContent = error.message;
+                });
+            });
+
+            document.getElementById('adMedia').addEventListener('change', function(event) {
+                var file = event.target.files[0];
+                var previewContainer = document.getElementById('adPreviewContainer');
+                var imagePreview = document.getElementById('adImagePreview');
+                var videoPreview = document.getElementById('adVideoPreview');
+                if (adPreviewUrl) URL.revokeObjectURL(adPreviewUrl);
+                adPreviewUrl = null;
+                imagePreview.hidden = true;
+                videoPreview.hidden = true;
+                previewContainer.hidden = !file;
+                if (!file) return;
+                document.getElementById('adFileName').textContent = file.name;
+                if (file.size > 20 * 1024 * 1024) {
+                    document.getElementById('adStatus').textContent = 'Choose media smaller than 20 MB.';
+                    event.target.value = '';
+                    previewContainer.hidden = true;
+                    return;
+                }
+                if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+                    document.getElementById('adStatus').textContent = 'Choose an image or video file.';
+                    event.target.value = '';
+                    previewContainer.hidden = true;
+                    return;
+                }
+                adPreviewUrl = URL.createObjectURL(file);
+                if (file.type.startsWith('image/')) {
+                    imagePreview.src = adPreviewUrl;
+                    imagePreview.hidden = false;
+                } else {
+                    videoPreview.src = adPreviewUrl;
+                    videoPreview.hidden = false;
+                }
+                document.getElementById('adStatus').textContent = '';
+            });
+
+            document.getElementById('adForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var status = document.getElementById('adStatus');
+                var file = document.getElementById('adMedia').files[0];
+                var form = event.currentTarget;
+                if (!file || file.size > 20 * 1024 * 1024) {
+                    status.textContent = 'Choose an image or reel smaller than 20 MB.';
+                    return;
+                }
+                status.textContent = 'Saving campaign details...';
+                apiRequest('/api/ad-submissions', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        fileName: file.name,
+                        mediaType: file.type,
+                        requestedViews: Number(document.getElementById('adViews').value),
+                        durationDays: Number(document.getElementById('adDuration').value)
+                    })
+                }).then(function() {
+                    status.textContent = 'Campaign details saved on this server. The media file itself was not uploaded.';
+                    form.reset();
+                    if (adPreviewUrl) URL.revokeObjectURL(adPreviewUrl);
+                    adPreviewUrl = null;
+                    document.getElementById('adPreviewContainer').hidden = true;
+                    return refreshCurrentAccount();
+                }).catch(function(error) {
+                    status.textContent = error.message;
+                });
+            });
+
+            document.querySelectorAll('.package-activate').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    if (!currentAccount) {
+                        packageNotice.textContent = 'Log in to select a package.';
+                        return;
+                    }
+                    startPackageCheckout(button.getAttribute('data-package'));
+                });
+            });
+
+            profileButton.addEventListener('click', function() {
+                profileDialog.showModal();
+            });
+            document.getElementById('closeProfileDialog').addEventListener('click', function() {
+                profileDialog.close();
+            });
+            profileDialog.addEventListener('click', function(event) {
+                if (event.target === profileDialog) profileDialog.close();
+            });
+            document.addEventListener('click', function(event) {
+                var profileLink = event.target.closest('a[href="profile"]');
+                if (!profileLink) return;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                profileDialog.showModal();
+                if (window.innerWidth <= 768) {
+                    var sidebar = document.getElementById('sidebar');
+                    sidebar.classList.remove('open');
+                }
+            }, true);
+
+            loginTab.addEventListener('click', function() {
+                setMode(false);
+            });
+            signupTab.addEventListener('click', function() {
+                setMode(true);
+            });
+
+            authForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                authMessage.textContent = '';
+
+                var email = accountEmail.value.trim().toLowerCase();
+                var password = accountPassword.value;
+                if (isCreatingAccount && password !== accountConfirmPassword.value) {
+                    authMessage.textContent = 'Passwords do not match.';
+                    return;
+                }
+                authSubmit.disabled = true;
+                authMessage.textContent = isCreatingAccount ? 'Creating your secure account...' : 'Signing in...';
+                var endpoint = isCreatingAccount ? '/api/auth/register' : '/api/auth/login';
+                var body = {
+                    email: email,
+                    password: password
+                };
+                legacyBalanceNotImported = false;
+                if (isCreatingAccount) {
+                    body.username = accountName.value.trim();
+                    body.phone = accountPhone.value.trim();
+                    body.country = accountCountry.value;
+                    body.countryName = accountCountry.options[accountCountry.selectedIndex].text;
+                    body.terms = termsAgreement.checked;
+                }
+                var authentication = apiRequest(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                });
+                if (!isCreatingAccount) {
+                    authentication = authentication.catch(function(error) {
+                        if (error.status === 401) return migrateLegacyAccount(email, password);
+                        throw error;
+                    });
+                }
+                authentication.then(function(result) {
+                    currentAccount = result.account;
+                    renderMemberDashboard(currentAccount.email);
+                    setAuthenticated(true);
+                    authForm.reset();
+                    authMessage.textContent = '';
+                    return verifyReturnedPayment();
+                }).catch(function(error) {
+                    authMessage.textContent = error.message;
+                }).finally(function() {
+                    authSubmit.disabled = false;
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                var logoutLink = event.target.closest('a[onclick*="logout"]');
+                if (!logoutLink) return;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                apiRequest('/api/auth/logout', { method: 'POST' }).then(function() {
+                    currentAccount = null;
+                    legacyBalanceNotImported = false;
+                    setMode(false);
+                    setAuthenticated(false);
+                    accountEmail.focus();
+                }).catch(function(error) {
+                    authMessage.textContent = error.message;
+                });
+            }, true);
+
+            setAuthenticated(false);
+            apiRequest('/api/auth/me').then(function(result) {
+                currentAccount = result.account;
+                renderMemberDashboard(currentAccount.email);
+                setAuthenticated(true);
+                return verifyReturnedPayment();
+            }).catch(function(error) {
+                setAuthenticated(false);
+                if (error.message !== 'Sign in to continue.' && error.message !== 'Your session has expired. Please sign in again.') {
+                    authMessage.textContent = error.message;
+                }
+                if (new URLSearchParams(window.location.search).has('reference') || new URLSearchParams(window.location.search).has('trxref')) {
+                    authMessage.textContent = 'Sign in to verify your payment and refresh your Total Deposit.';
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>
